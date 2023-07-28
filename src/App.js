@@ -24,7 +24,7 @@ const App = () => {
   if (activeApp === 'box3') {
     content = <ResumeContent />;
   } else if (activeApp === 'box2') {
-    content = <ReactGithubList username="qNateYT" />;
+    content = <ReactGithubList username="NatesHonor" />;
   }
 
   return (
