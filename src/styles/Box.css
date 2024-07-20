@@ -1,0 +1,38 @@
+  .box:hover {
+    transform: scale(1.1);
+  }
+  
+  .box.active {
+    background-color: #aaa;
+    transform: scale(1.1);
+  }
+  
+  .box h3 {
+    margin: 0;
+  }
+  
+  .box p {
+    margin-top: 20px;
+  }
+  
+  
+  .box-container {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 550px;
+  }
+  
+  
+  .box {
+    width: 200px;
+    height: 200px;
+    border: 1px solid #ccc;
+    margin-right: 10px;
+    cursor: pointer;
+  }
+
+
+.box-content {
+  padding: 10px;
+  text-align: center;
+}
