@@ -34,7 +34,7 @@
     const [activeApp, setActiveApp] = useState(null);
     const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
     const [visibleVideos, setVisibleVideos] = useState([]);
-    const [fadeOpacity, setFadeOpacity] = useState(0);
+    const [fadeOpacity] = useState(0);
 
     const terminalRef = useRef(null);
     const videoRef = useRef(null);
