@@ -27,5 +27,4 @@ node_modules
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-src/ReactGithubList
 node_modules/@natesolutions/react-github-widget
