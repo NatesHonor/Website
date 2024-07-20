@@ -1,0 +1,42 @@
+.left-section {
+    flex: 1;
+    padding: 10px;
+  }
+  
+  .right-section {
+    flex: 2;
+    padding: 10px;
+  }
+  
+  .video-section {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    z-index: 2;
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+    margin-top: 50vh;
+  } 
+  
+  .video-section video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+  .video-section .video-overlay {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 50%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 3;
+    color: white;
+  }
