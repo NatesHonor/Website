@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, forwardRef } from 'react';
 import '../styles/Terminal.css';
 
-const Terminal = () => {
+const Terminal = forwardRef((props, ref) => {
   const [displayText, setDisplayText] = useState('');
   const terminalRef = useRef(null);
   const [cursorVisible, setCursorVisible] = useState(false);
@@ -59,9 +59,11 @@ const Terminal = () => {
 
     setDisplayText(terminalOutputs.join('\n'));
 
-    terminalRef.current.scrollTop = terminalRef.current.scrollHeight;
+    if (terminalRef.current) {
+      terminalRef.current.scrollTop = terminalRef.current.scrollHeight;
+    }
 
-    setTimeout(typeText, 2000); // Delay before starting to type
+    setTimeout(typeText, 2000);
 
   }, []);
 
@@ -76,7 +78,7 @@ const Terminal = () => {
             return prevText + '|';
           }
         });
-      }, 500); // Cursor blink interval
+      }, 500);
     }
 
     return () => {
@@ -85,13 +87,13 @@ const Terminal = () => {
   }, [cursorVisible]);
 
   return (
-    <div className="terminal" ref={terminalRef}>
+    <div className="terminal" ref={ref}>
       <pre>
         {displayText}
         {underlineVisible && <span className="underline"></span>}
       </pre>
     </div>
   );
-};
+});
 
 export default Terminal;

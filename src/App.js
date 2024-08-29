@@ -6,6 +6,7 @@ import ResumeContent from './functions/ResumeContent';
 import ReactGithubList from './ReactGithubList/react-github-widget';
 import Header from './functions/Header';
 import { videoUrls, shuffleArray } from './functions/VideoHandler';
+import GifComponent from './functions/GifHandler';
 
 const App = () => {
   const [activeApp, setActiveApp] = useState(null);
@@ -66,7 +67,19 @@ const App = () => {
   if (activeApp === 'box3') {
     content = <ResumeContent />;
   } else if (activeApp === 'box2') {
-    content = <ReactGithubList username="NatesHonor" />;
+    content = (
+      <div>
+        <h2 style={{ display: 'inline', marginRight: '10px' }}>
+          Mission Chief Bot
+        </h2>
+        <span style={{ color: 'gold', fontSize: '50px' }}>★</span>
+        <p style={{ fontSize: '12px', marginTop: '0' }}>
+          Most popular project with 300+ downloads
+        </p>
+        <GifComponent />
+        <ReactGithubList username="NatesHonor" />
+      </div>
+    );
   }
 
   return (

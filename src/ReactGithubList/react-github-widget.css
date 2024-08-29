@@ -1,165 +1,83 @@
-.github-widget .repositories-container {
-  display: flex; /* Creates a horizontal layout */
-  flex-wrap: wrap; /* Allow repositories to wrap to the next line */
-}
-
-.github-widget .repo {
-  margin: 10px;
-  padding: 10px;
-  border: 1px solid #ccc;
-  width: 600px; /* Adjust the width to fit the desired number of repositories per row */
-  display: flex;
-  flex-direction: column;
-  position: relative; /* Add position relative to enable absolute positioning of elements inside */
-}
-
-.github-widget .repo-header {
-  display: flex;
-  align-items: center;
-  margin-bottom: 10px;
-}
-
-.github-widget .repo-name {
-  font-weight: bold;
-  margin-right: 5px;
-}
-
-.github-widget .repo-details {
-  display: flex; /* Change to flex display */
-  align-items: center; /* Align items vertically */
-}
-
-.github-widget .repo-language {
-  display: flex;
-  align-items: center;
-  padding: 2px 6px;
-  border-radius: 20px;
-  margin-left: 10px; /* Add spacing between project name and language */
-}
-
-.github-widget .repo-language .language-dot {
-  margin-right: 4px;
-}
-
-.github-widget .repo-language span {
-  font-size: 14px;
-  font-weight: bold;
-}
-
-
-.github-widget .repo-description {
-  color: #777;
-  font-size: 14px;
-  margin-bottom: 10px;
-}
-
-.github-widget .repo-size {
-  margin-right: 10px;
-}
-
-.github-widget .repo-updated {
-  font-style: italic;
-}
-
-/* Language dot colors */
-.github-widget .language-dot.c {
-  background-color: #555;
-}
-
-.github-widget .language-dot.cpp {
-  background-color: #f34b7d;
-}
-
-.github-widget .language-dot.css {
-  background-color: #563d7c;
-}
-
-.github-widget .language-dot.html {
-  background-color: #e34c26;
-}
-
-.github-widget .language-dot.java {
-  background-color: #b07219;
-}
-
-.github-widget .language-dot.javascript {
-  background-color: #f1e05a;
-}
-
-.github-widget .language-dot.php {
-  background-color: #4f5d95;
-}
-
-.github-widget .language-dot.python {
-  background-color: #3572a5;
-}
-
-.github-widget .language-dot.ruby {
-  background-color: #701516;
-}
-
-/* Add more colors for other programming languages if needed */
-
-.github-widget .userprofile {
-  position: absolute; /* Add absolute positioning */
-  top: 10px; /* Adjust top positioning to desired distance from the top */
-  right: 10px; /* Adjust right positioning to desired distance from the right */
-  display: flex;
-  align-items: center;
-}
-
-.github-widget .userprofile img {
-  width: 40px; /* Adjust the size of the profile picture */
-  height: 40px;
-  border-radius: 50%; /* Make it a circle */
-  margin-right: 10px; /* Add some spacing between the picture and the username */
-}
-
-.github-widget .userprofile p {
-  font-weight: bold;
-}
-
 .github-widget {
   font-family: Arial, sans-serif;
-  border: 1px solid #ddd;
-  padding: 10px;
-  max-width: 1550px; /* Increase the max-width to accommodate multiple repositories */
-  position: relative; /* Add position relative to contain the absolute positioning of the userprofile */
+  border: 1px solid #444;
+  padding: 20px;
+  max-width: 100%;
+  margin: 0 auto;
+  background-color: #1e1e1e;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  color: #fff;
 }
 
 .github-widget h2 {
   text-align: center;
+  margin-bottom: 20px;
+  color: #fff;
 }
 
-.repositories-container {
-  display: flex; /* Use flexbox to create a horizontal layout */
-  flex-wrap: wrap; /* Allow repositories to wrap to the next line */
+.userprofile {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.userprofile img {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.userprofile p {
+  font-weight: bold;
+  font-size: 18px;
 }
 
 .repositories-container {
   display: flex;
   flex-wrap: wrap;
+  justify-content: space-between;
 }
 
 .repo {
+  background-color: #2e2e2e;
+  border: 1px solid #444;
+  border-radius: 10px;
+  padding: 15px;
   margin: 10px;
-  padding: 10px;
-  border: 1px solid #ccc;
-  width: 600px;
-  display: flex;
-  flex-direction: column;
-  position: relative;
+  flex: 1 1 calc(33.333% - 20px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .repo-header {
   display: flex;
+  justify-content: space-between;
   align-items: center;
   margin-bottom: 10px;
 }
 
 .repo-name {
+  display: flex;
+  align-items: center;
+}
+
+.repo-name a {
   font-weight: bold;
-  margin-right: 5px;
+  font-size: 16px;
+  color: #1e90ff;
+  text-decoration: none;
+  margin-right: 10px;
+}
+
+.repo-name a:hover {
+  text-decoration: underline;
+}
+
+.repo-stars {
+  font-size: 16px;
+  color: gold;
+  font-weight: bold;
 }
 
 .repo-details {
@@ -170,32 +88,27 @@
 .repo-language {
   display: flex;
   align-items: center;
-  padding: 2px 6px;
-  border-radius: 20px;
   margin-left: 10px;
 }
 
-.repo-language .language-dot {
-  margin-right: 4px;
-}
-
-.repo-language span {
-  font-size: 14px;
-  font-weight: bold;
+.language-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  margin-right: 5px;
 }
 
 .repo-description {
-  color: #777;
+  color: #ccc;
   font-size: 14px;
   margin-bottom: 10px;
 }
 
-.repo-size {
-  margin-right: 10px;
-}
-
+.repo-size,
 .repo-updated {
-  font-style: italic;
+  font-size: 12px;
+  color: #aaa;
+  margin-right: 10px;
 }
 
 .language-dot.c {
@@ -218,7 +131,7 @@
   background-color: #b07219;
 }
 
-.javascript {
+.language-dot.javascript {
   background-color: #f1e05a;
 }
 
@@ -232,35 +145,4 @@
 
 .language-dot.ruby {
   background-color: #701516;
-}
-
-.userprofile {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  display: flex;
-  align-items: center;
-}
-
-.userprofile img {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  margin-right: 10px;
-}
-
-.userprofile p {
-  font-weight: bold;
-}
-
-.github-widget {
-  font-family: Arial, sans-serif;
-  border: 1px solid #ddd;
-  padding: 10px;
-  max-width: 1550px;
-  position: relative;
-}
-
-.github-widget h2 {
-  text-align: center;
 }

@@ -35,7 +35,8 @@ function ReactGithubList({ username }) {
           }
         })
         .then((data) => {
-          setRepositories(data);
+          const sortedRepos = data.sort((a, b) => b.stargazers_count - a.stargazers_count);
+          setRepositories(sortedRepos);
           setLoading(false);
         })
         .catch((error) => {
@@ -85,6 +86,7 @@ function ReactGithubList({ username }) {
                   <div className="repo-header">
                     <div className="repo-name">
                       <a href={repo.html_url}>{repo.name}</a>
+                      <span className="repo-stars">★ {repo.stargazers_count}</span>
                     </div>
                     {repo.language && (
                       <div className="repo-details">
