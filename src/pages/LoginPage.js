@@ -27,7 +27,7 @@ const LoginPage = () => {
   const location = useLocation();
 
   const handleLogin = async () => {
-    const response = await fetch('http://localhost:5000/sso/login', {
+    const response = await fetch('https://api.natemarcellus.com/sso/login', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -42,7 +42,7 @@ const LoginPage = () => {
       const redirectTo = location.state?.from || 'https://www.natemarcellus.com';
       setTimeout(() => {
         navigate(redirectTo);
-      }, 2000); // Redirect after 2 seconds
+      }, 2000);
     } else {
       console.error('Login failed');
       setError('Invalid credentials. Please try again.');
