@@ -7,8 +7,10 @@ import ReactGithubList from './ReactGithubList/react-github-widget';
 import Header from './functions/Header';
 import { videoUrls, shuffleArray } from './functions/VideoHandler';
 import GifComponent from './functions/GifHandler';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Login from './pages/LoginPage';
 
-const App = () => {
+const MainApp = () => {
   const [activeApp, setActiveApp] = useState(null);
   const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
   const [visibleVideos, setVisibleVideos] = useState([]);
@@ -69,9 +71,7 @@ const App = () => {
   } else if (activeApp === 'box2') {
     content = (
       <div>
-        <h2 style={{ display: 'inline', marginRight: '10px' }}>
-          Mission Chief Bot
-        </h2>
+        <h2 style={{ display: 'inline', marginRight: '10px' }}>Mission Chief Bot</h2>
         <span style={{ color: 'gold', fontSize: '50px' }}>★</span>
         <p style={{ fontSize: '12px', marginTop: '0' }}>
           Most popular project with 300+ downloads
@@ -87,11 +87,7 @@ const App = () => {
       <header className="App-header">
         <Header />
         <Terminal activeApp={activeApp} id="terminal" ref={terminalRef} className="fade-element" />
-        <div
-          className="video-section fade-element"
-          id="video"
-          ref={videoRef}
-        >
+        <div className="video-section fade-element" id="video" ref={videoRef}>
           <div className="video-overlay">
             <h2>Check out my Clips!</h2>
           </div>
@@ -134,6 +130,17 @@ const App = () => {
         </a>
       </header>
     </div>
+  );
+};
+
+const App = () => {
+  return (
+    <Router>
+      <Routes>
+        <Route path="/login" element={<Login />} />
+        <Route path="/*" element={<MainApp />} />
+      </Routes>
+    </Router>
   );
 };
 
