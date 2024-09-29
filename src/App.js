@@ -8,7 +8,7 @@ import Header from './functions/Header';
 import { videoUrls, shuffleArray } from './functions/VideoHandler';
 import GifComponent from './functions/GifHandler';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Login from './pages/LoginPage';
+import LoginPage from './pages/LoginPage';
 
 const MainApp = () => {
   const [activeApp, setActiveApp] = useState(null);
@@ -137,7 +137,7 @@ const App = () => {
   return (
     <Router>
       <Routes>
-        <Route path="/login" element={<Login />} />
+        <Route path="/login" element={<LoginPage />} />
         <Route path="/*" element={<MainApp />} />
       </Routes>
     </Router>
