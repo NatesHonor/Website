@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Container, TextField, Button, Typography, CssBaseline, Box, Alert } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import Cookies from 'js-cookie';
 
 const darkTheme = createTheme({ palette: { mode: 'dark' } });
@@ -15,7 +15,6 @@ const LoginPage = () => {
   const [isLoginMode, setIsLoginMode] = useState(true);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
-  const navigate = useNavigate();
   const location = useLocation();
 
   const API_KEY = process.env.REACT_APP_API_KEY;
@@ -26,7 +25,7 @@ const LoginPage = () => {
       setError('Email and password are required.');
       return;
     }
-
+  
     const response = await fetch('https://api.natemarcellus.com/sso/login', {
       method: 'POST',
       headers: {
@@ -35,7 +34,7 @@ const LoginPage = () => {
       },
       body: JSON.stringify({ email, password }),
     });
-
+  
     if (response.ok) {
       const { token, username } = await response.json();
       Cookies.set('authToken', token, { domain: '.natemarcellus.com' }); 
@@ -44,11 +43,14 @@ const LoginPage = () => {
       setError('');
       setSuccess('Login successful! Redirecting...');
       const redirectTo = location.state?.from || 'https://support.natemarcellus.com';
-      setTimeout(() => navigate(redirectTo), 2000);
+      
+      setTimeout(() => {
+        window.location.href = redirectTo;
+      }, 2000);
     } else {
       setError('Invalid credentials. Please try again.');
     }
-  };
+  };  
   
   const handleRegister = async (e) => {
     e.preventDefault();
