@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Container, TextField, Button, Typography, CssBaseline, Box, Alert } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useNavigate, useLocation } from 'react-router-dom';
+import Cookies from 'js-cookie';  // Add js-cookie to manage cookies
 
 const darkTheme = createTheme({ palette: { mode: 'dark' } });
 const lightTheme = createTheme({ palette: { mode: 'light' } });
@@ -25,6 +26,7 @@ const LoginPage = () => {
       setError('Email and password are required.');
       return;
     }
+
     const response = await fetch('https://api.natemarcellus.com/sso/login', {
       method: 'POST',
       headers: {
@@ -33,10 +35,15 @@ const LoginPage = () => {
       },
       body: JSON.stringify({ email, password }),
     });
+
     if (response.ok) {
+      const { token, username } = await response.json();  // Get token and username from response
+      Cookies.set('authToken', token, { domain: '.natemarcellus.com' });  // Set token in shared cookie
+      Cookies.set('username', username, { domain: '.natemarcellus.com' });  // Set username in shared cookie
+      
       setError('');
       setSuccess('Login successful! Redirecting...');
-      const redirectTo = location.state?.from || 'https://www.natemarcellus.com';
+      const redirectTo = location.state?.from || 'https://support.natemarcellus.com';  // Redirect to support site
       setTimeout(() => navigate(redirectTo), 2000);
     } else {
       setError('Invalid credentials. Please try again.');
@@ -49,6 +56,7 @@ const LoginPage = () => {
       setError('All fields are required for registration.');
       return;
     }
+
     const response = await fetch('https://api.natemarcellus.com/sso/register', {
       method: 'POST',
       headers: {
@@ -57,10 +65,11 @@ const LoginPage = () => {
       },
       body: JSON.stringify({ email, username, password }),
     });
+
     if (response.ok) {
       setError('');
       setSuccess('Registration successful, please log in.');
-      setIsLoginMode(true);
+      setIsLoginMode(true);  // Switch to login mode after successful registration
     } else {
       setError('Registration failed. Please try again.');
     }
