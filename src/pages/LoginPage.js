@@ -21,7 +21,6 @@ const LoginPage = () => {
   const API_KEY = process.env.REACT_APP_API_KEY;
 
   const handleLogin = async (e) => {
-    console.log(API_KEY)
     e.preventDefault();
     if (!email || !password) {
       setError('Email and password are required.');
