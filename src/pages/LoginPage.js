@@ -41,7 +41,8 @@ const LoginPage = () => {
       Cookies.set('username', user.username, { domain: '.natemarcellus.com' });
       Cookies.set('userId', user.id, { domain: '.natemarcellus.com' });
       Cookies.set('email', user.email, { domain: '.natemarcellus.com' });
-      
+      Cookies.set('role', user.role, { domain: '.natemarcellus.com' }); // Store user role
+
       setError('');
       setSuccess('Login successful! Redirecting...');
       const redirectTo = location.state?.from || 'https://support.natemarcellus.com';
