@@ -25,20 +25,22 @@ const LoginPage = () => {
       setError('Email and password are required.');
       return;
     }
-  
+
     const response = await fetch('https://api.natemarcellus.com/sso/login', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'x-api-key': API_KEY
+        'x-api-key': API_KEY,
       },
       body: JSON.stringify({ email, password }),
     });
-  
+
     if (response.ok) {
-      const { token, username } = await response.json();
-      Cookies.set('authToken', token, { domain: '.natemarcellus.com' }); 
-      Cookies.set('username', username, { domain: '.natemarcellus.com' });
+      const { token, user } = await response.json(); // Destructure user data
+      Cookies.set('authToken', token, { domain: '.natemarcellus.com' });
+      Cookies.set('username', user.username, { domain: '.natemarcellus.com' });
+      Cookies.set('userId', user.id, { domain: '.natemarcellus.com' });
+      Cookies.set('email', user.email, { domain: '.natemarcellus.com' });
       
       setError('');
       setSuccess('Login successful! Redirecting...');
@@ -50,8 +52,8 @@ const LoginPage = () => {
     } else {
       setError('Invalid credentials. Please try again.');
     }
-  };  
-  
+  };
+
   const handleRegister = async (e) => {
     e.preventDefault();
     if (!email || !username || !password) {
@@ -63,7 +65,7 @@ const LoginPage = () => {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'x-api-key': API_KEY
+        'x-api-key': API_KEY,
       },
       body: JSON.stringify({ email, username, password }),
     });
@@ -71,7 +73,7 @@ const LoginPage = () => {
     if (response.ok) {
       setError('');
       setSuccess('Registration successful, please log in.');
-      setIsLoginMode(true); 
+      setIsLoginMode(true);
     } else {
       setError('Registration failed. Please try again.');
     }
