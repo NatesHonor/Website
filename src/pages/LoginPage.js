@@ -60,7 +60,7 @@ const LoginPage = () => {
       setError('All fields are required for registration.');
       return;
     }
-
+  
     const response = await fetch('https://api.natemarcellus.com/sso/register', {
       method: 'POST',
       headers: {
@@ -69,16 +69,18 @@ const LoginPage = () => {
       },
       body: JSON.stringify({ email, username, password }),
     });
-
+  
     if (response.ok) {
       setError('');
       setSuccess('Registration successful, please log in.');
       setIsLoginMode(true);
     } else {
+      const errorData = await response.json();
+      console.error('Registration failed:', errorData);
       setError('Registration failed. Please try again.');
     }
   };
-
+  
   return (
     <ThemeProvider theme={isDarkMode ? darkTheme : lightTheme}>
       <CssBaseline />
