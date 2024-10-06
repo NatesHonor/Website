@@ -37,7 +37,7 @@ const LoginPage = () => {
 
     if (response.ok) {
       const { token, user } = await response.json(); 
-      Cookies.set('authToken', token, { domain: '.natemarcellus.com' });
+      Cookies.set('token', token, { domain: '.natemarcellus.com' });
       Cookies.set('username', user.username, { domain: '.natemarcellus.com' });
       Cookies.set('userId', user.id, { domain: '.natemarcellus.com' });
       Cookies.set('email', user.email, { domain: '.natemarcellus.com' });
