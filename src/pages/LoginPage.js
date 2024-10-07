@@ -19,6 +19,11 @@ const LoginPage = () => {
 
   const API_KEY = process.env.REACT_APP_API_KEY;
 
+  const getRedirectUrl = () => {
+    const params = new URLSearchParams(location.search);
+    return params.get('redirect') || 'https://www.natemarcellus.com';
+  };
+
   const handleLogin = async (e) => {
     e.preventDefault();
     if (!email || !password) {
@@ -36,16 +41,16 @@ const LoginPage = () => {
     });
 
     if (response.ok) {
-      const { token, user } = await response.json(); 
+      const { token, user } = await response.json();
       Cookies.set('token', token, { domain: '.natemarcellus.com' });
       Cookies.set('username', user.username, { domain: '.natemarcellus.com' });
       Cookies.set('userId', user.id, { domain: '.natemarcellus.com' });
       Cookies.set('email', user.email, { domain: '.natemarcellus.com' });
-      Cookies.set('role', user.role, { domain: '.natemarcellus.com' }); // Store user role
+      Cookies.set('role', user.role, { domain: '.natemarcellus.com' });
 
       setError('');
       setSuccess('Login successful! Redirecting...');
-      const redirectTo = location.state?.from || 'https://support.natemarcellus.com';
+      const redirectTo = getRedirectUrl();
       
       setTimeout(() => {
         window.location.href = redirectTo;
@@ -61,7 +66,7 @@ const LoginPage = () => {
       setError('All fields are required for registration.');
       return;
     }
-  
+
     const response = await fetch('https://api.natemarcellus.com/sso/register', {
       method: 'POST',
       headers: {
@@ -70,7 +75,7 @@ const LoginPage = () => {
       },
       body: JSON.stringify({ email, username, password }),
     });
-  
+
     if (response.ok) {
       setError('');
       setSuccess('Registration successful, please log in.');
@@ -81,7 +86,7 @@ const LoginPage = () => {
       setError('Registration failed. Please try again.');
     }
   };
-  
+
   return (
     <ThemeProvider theme={isDarkMode ? darkTheme : lightTheme}>
       <CssBaseline />
