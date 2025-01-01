@@ -21,8 +21,13 @@ const LoginPage = () => {
 
   const getRedirectUrl = () => {
     const params = new URLSearchParams(location.search);
-    return params.get('redirect') || 'https://www.natemarcellus.com';
+    const redirectUrl = params.get('redirect');
+    if (redirectUrl) {
+      return `https://${redirectUrl}`;
+    }
+    return 'https://www.natemarcellus.com';
   };
+  
 
   const handleLogin = async (e) => {
     e.preventDefault();
