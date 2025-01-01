@@ -9,6 +9,7 @@ import { videoUrls, shuffleArray } from './functions/VideoHandler';
 import GifComponent from './functions/GifHandler';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import LoginPage from './pages/LoginPage';
+import AboutMeText from './aboutMeText';
 
 const MainApp = () => {
   const [activeApp, setActiveApp] = useState(null);
@@ -80,6 +81,8 @@ const MainApp = () => {
         <ReactGithubList username="NatesHonor" />
       </div>
     );
+  } else if (activeApp === 'box1') {
+    content = <AboutMeText />;
   }
 
   return (
@@ -107,7 +110,7 @@ const MainApp = () => {
             boxText={box1Text}
             onClick={() => handleBoxClick('box1')}
           >
-            {activeApp !== 'box1' && 'My Backstory'}
+            {activeApp !== 'box1' && 'Get To Know Me!'}
           </Box>
           <Box
             active={activeApp === 'box2'}
