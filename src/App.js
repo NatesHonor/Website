@@ -9,6 +9,7 @@ import { videoUrls, shuffleArray } from './functions/VideoHandler';
 import GifComponent from './functions/GifHandler';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import LoginPage from './pages/LoginPage';
+import Iloveyou from './pages/iloveyou';
 import AboutMeText from './aboutMeText';
 
 const MainApp = () => {
@@ -140,6 +141,7 @@ const App = () => {
   return (
     <Router>
       <Routes>
+      <Route path="/iloveyou" element={<Iloveyou />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/*" element={<MainApp />} />
       </Routes>
