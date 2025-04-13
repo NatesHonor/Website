@@ -5,12 +5,16 @@ const Iloveyou = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
-  const correctPassword = 'valentine';
-
+  const correctPasswords = {
+    valentine: '/secret',
+    WZ12: '/tempphoto',
+  };
+  
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (password === correctPassword) {
-      navigate('/secret');
+    const path = correctPasswords[password];
+    if (path) {
+      navigate(path);
     } else {
       setError('Incorrect password! Try again.');
     }
@@ -18,7 +22,7 @@ const Iloveyou = () => {
 
   return (
     <div style={styles.container}>
-      <h1 style={styles.title}>💖 Welcome to Your Special Page 💖</h1>
+      <h1 style={styles.title}>💖 I love you 💖</h1>
       <form onSubmit={handleSubmit} style={styles.form}>
         <label style={styles.label}>Enter Password:</label>
         <input
