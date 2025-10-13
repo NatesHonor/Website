@@ -13,6 +13,7 @@ import Iloveyou from './pages/iloveyou';
 import Secret from './pages/Secret';
 import TempPhoto from './pages/tempphoto';
 import AboutMeText from './aboutMeText';
+import SchedulePage from './pages/SchedulePage';
 
 const MainApp = () => {
   const [activeApp, setActiveApp] = useState(null);
@@ -147,6 +148,7 @@ const App = () => {
         <Route path="/secret" element={<Secret />} />
         <Route path="/tempphoto" element={<TempPhoto />} />
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/schedule" element={<SchedulePage />} />
         <Route path="/*" element={<MainApp />} />
       </Routes>
     </Router>
