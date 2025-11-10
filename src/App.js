@@ -143,7 +143,6 @@ const App = () => {
   return (
     <Router>
       <Routes>
-        <Route path="/iloveyou" element={<Iloveyou />} />
         <Route path="/secret" element={<Secret />} />
         <Route path="/tempphoto" element={<TempPhoto />} />
         <Route path="/login" element={<LoginPage />} />
