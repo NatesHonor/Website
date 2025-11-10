@@ -1,0 +1,123 @@
+.schedule-container {
+  height: 100vh;
+  background-color: #080818;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 3rem 2rem;
+  font-family: "Poppins", sans-serif;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: none;
+}
+
+.schedule-container::-webkit-scrollbar {
+  display: none;
+}
+
+.schedule-container h1 {
+  font-size: 2.8rem;
+  margin-bottom: 0.5rem;
+  color: #4da3ff;
+  text-shadow: 0 0 10px rgba(77, 163, 255, 0.3);
+}
+
+.schedule-container p {
+  max-width: 700px;
+  text-align: center;
+  margin-bottom: 2rem;
+  font-size: 1rem;
+  opacity: 0.8;
+}
+
+.tabs {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.tab {
+  background: #111;
+  border: 1px solid #4da3ff;
+  color: #4da3ff;
+  padding: 0.7rem 1.5rem;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: 0.3s ease;
+  font-size: 1rem;
+}
+
+.tab.active {
+  background: #4da3ff;
+  color: #fff;
+  transform: scale(1.05);
+}
+
+.tab:hover {
+  background: #2b6db4;
+  color: #fff;
+}
+
+.items-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  width: 100%;
+  max-width: 1100px;
+  margin-bottom: 3rem;
+}
+
+.item-card {
+  background: #101020;
+  border-radius: 16px;
+  padding: 1.5rem;
+  border: 1px solid rgba(77, 163, 255, 0.2);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  transition: 0.3s ease;
+}
+
+.item-card:hover {
+  transform: translateY(-5px);
+  border-color: #4da3ff;
+}
+
+.item-card h3 {
+  color: #fff;
+  margin-bottom: 0.5rem;
+  font-size: 1.25rem;
+}
+
+.item-card p {
+  color: #ccc;
+  font-size: 0.95rem;
+  margin-bottom: 0.8rem;
+  min-height: 50px;
+}
+
+.price {
+  display: inline-block;
+  margin-bottom: 1rem;
+  color: #4da3ff;
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+
+.action-btn {
+  background: #4da3ff;
+  border: none;
+  border-radius: 8px;
+  color: #fff;
+  padding: 0.6rem 1.2rem;
+  cursor: pointer;
+  transition: 0.3s ease;
+  width: 100%;
+  font-weight: 600;
+}
+
+.action-btn:hover {
+  background: #2b6db4;
+}
