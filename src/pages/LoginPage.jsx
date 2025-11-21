@@ -7,6 +7,8 @@ import Cookies from 'js-cookie';
 const darkTheme = createTheme({ palette: { mode: 'dark' } });
 const lightTheme = createTheme({ palette: { mode: 'light' } });
 
+const api_base_url = process.env.REACT_APP_API_BASE_URL;
+
 const LoginPage = () => {
   const [email, setEmail] = useState('');
   const [username, setUsername] = useState('');
@@ -15,51 +17,49 @@ const LoginPage = () => {
   const [isLoginMode, setIsLoginMode] = useState(true);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const [resendMessage, setResendMessage] = useState('');
   const location = useLocation();
 
   const getRedirectUrl = () => {
     const params = new URLSearchParams(location.search);
     const redirectUrl = params.get('redirect');
-    if (redirectUrl) return `https://${redirectUrl}`;
-    return 'https://www.natemarcellus.com';
+    if (redirectUrl) {
+      if (redirectUrl.startsWith('http')) return redirectUrl;
+      return `${window.location.origin}${redirectUrl}`;
+    }
+    return window.location.origin;
   };
 
   const handleLogin = async (e) => {
     e.preventDefault();
     setError('');
     setSuccess('');
+    setResendMessage('');
     if (!email || !password) {
       setError('Email and password are required.');
       return;
     }
-
     try {
-      const response = await fetch('https://api.natemarcellus.com/sso/login', {
+      const response = await fetch(`${api_base_url}/sso/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),
       });
-
       const data = await response.json();
-
       if (!response.ok || !data.success) {
         setError(data.message || 'Invalid credentials.');
+        if (data.resend) {
+          setResendMessage('Your email is not verified.');
+        }
         return;
       }
-
       const { token, user } = data;
-
-      Cookies.set('token', token, { 
-        domain: '.natemarcellus.com',
-        secure: true,
-        sameSite: 'Strict',
-        expires: 7 
-      });
-      Cookies.set('username', user.username, { domain: '.natemarcellus.com', secure: true, sameSite: 'Strict', expires: 7 });
-      Cookies.set('userId', user.id, { domain: '.natemarcellus.com', secure: true, sameSite: 'Strict', expires: 7 });
-      Cookies.set('email', user.email, { domain: '.natemarcellus.com', secure: true, sameSite: 'Strict', expires: 7 });
-      Cookies.set('role', user.role, { domain: '.natemarcellus.com', secure: true, sameSite: 'Strict', expires: 7 });
-
+      const cookieDomain = api_base_url.replace(/^https?:\/\//, '');
+      Cookies.set('token', token, { domain: cookieDomain, secure: true, sameSite: 'Strict', expires: 7 });
+      Cookies.set('username', user.username, { domain: cookieDomain, secure: true, sameSite: 'Strict', expires: 7 });
+      Cookies.set('userId', user.id, { domain: cookieDomain, secure: true, sameSite: 'Strict', expires: 7 });
+      Cookies.set('email', user.email, { domain: cookieDomain, secure: true, sameSite: 'Strict', expires: 7 });
+      Cookies.set('role', user.role, { domain: cookieDomain, secure: true, sameSite: 'Strict', expires: 7 });
       setSuccess('Login successful! Redirecting...');
       const redirectTo = getRedirectUrl();
       setTimeout(() => {
@@ -74,29 +74,45 @@ const LoginPage = () => {
     e.preventDefault();
     setError('');
     setSuccess('');
+    setResendMessage('');
     if (!email || !username || !password) {
       setError('All fields are required for registration.');
       return;
     }
-
     try {
-      const response = await fetch('https://api.natemarcellus.com/sso/register', {
+      const response = await fetch(`${api_base_url}/sso/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, username, password }),
       });
-
       const data = await response.json();
-
       if (!response.ok || !data.success) {
         setError(data.message || 'Registration failed. Please try again.');
         return;
       }
-
-      setSuccess('Registration successful. Please log in.');
+      setSuccess('Registration successful. Please verify your email to log in.');
       setIsLoginMode(true);
     } catch {
       setError('An error occurred while registering.');
+    }
+  };
+
+  const handleResendVerification = async () => {
+    setResendMessage('');
+    try {
+      const response = await fetch(`${api_base_url}/email/send-verification`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
+      });
+      const data = await response.json();
+      if (!response.ok || !data.success) {
+        setResendMessage(data.message || 'Failed to resend verification email.');
+        return;
+      }
+      setResendMessage(data.message || 'Verification email resent successfully.');
+    } catch {
+      setResendMessage('An error occurred while resending the email.');
     }
   };
 
@@ -110,7 +126,14 @@ const LoginPage = () => {
           </Typography>
           {error && <Alert severity="error" sx={{ width: '100%', mt: 1 }}>{error}</Alert>}
           {success && <Alert severity="success" sx={{ width: '100%', mt: 1 }}>{success}</Alert>}
-
+          {resendMessage && (
+            <Box sx={{ width: '100%', mt: 1 }}>
+              <Alert severity="warning">{resendMessage}</Alert>
+              <Button fullWidth variant="contained" sx={{ mt: 1 }} onClick={handleResendVerification}>
+                Resend Verification Email
+              </Button>
+            </Box>
+          )}
           <form onSubmit={isLoginMode ? handleLogin : handleRegister}>
             <TextField
               margin="normal"
@@ -152,7 +175,6 @@ const LoginPage = () => {
               {isLoginMode ? 'Login' : 'Register'}
             </Button>
           </form>
-
           <Typography variant="body2" sx={{ mt: 1 }}>
             {isLoginMode ? "Don't have an account? " : "Already have an account? "}
             <Button
@@ -160,13 +182,13 @@ const LoginPage = () => {
               onClick={() => {
                 setError('');
                 setSuccess('');
+                setResendMessage('');
                 setIsLoginMode(!isLoginMode);
               }}
             >
               {isLoginMode ? 'Create one' : 'Login'}
             </Button>
           </Typography>
-
           <Button fullWidth variant="outlined" sx={{ mt: 1 }} onClick={() => setIsDarkMode(!isDarkMode)}>
             Toggle {isDarkMode ? 'Light' : 'Dark'} Mode
           </Button>
