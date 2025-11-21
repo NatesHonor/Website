@@ -171,11 +171,6 @@ const CheckoutPage = () => {
             {cart.map((item, idx) => (
               <div key={idx} className="cart-item">
                 <span>{item.title}</span>
-                <div className="cart-controls">
-                  <button disabled>-</button>
-                  <span>{item.quantity}</span>
-                  <button disabled>+</button>
-                </div>
                 <span>${(item.price * item.quantity).toFixed(2)}</span>
               </div>
             ))}
