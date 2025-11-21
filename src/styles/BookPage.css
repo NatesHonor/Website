@@ -22,6 +22,7 @@
   margin-bottom: 0.5rem;
   color: #4da3ff;
   text-shadow: 0 0 10px rgba(77, 163, 255, 0.3);
+  text-align: center;
 }
 
 .schedule-container p {
@@ -30,6 +31,81 @@
   margin-bottom: 2rem;
   font-size: 1rem;
   opacity: 0.8;
+}
+
+.schedule-header {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 2rem;
+  position: relative;
+}
+
+.cart-icon {
+  position: absolute;
+  top: 0;
+  right: 0;
+  cursor: pointer;
+}
+
+.cart-count {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: #4da3ff;
+  color: #fff;
+  border-radius: 50%;
+  padding: 2px 6px;
+  font-size: 0.8rem;
+  font-weight: bold;
+}
+
+.cart-dropdown {
+  position: absolute;
+  top: 40px;
+  right: 0;
+  background: #101020;
+  border: 1px solid #4da3ff;
+  border-radius: 12px;
+  padding: 1rem;
+  width: 250px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+  z-index: 1000;
+}
+
+.cart-dropdown p {
+  margin: 0;
+  text-align: center;
+  color: #ccc;
+}
+
+.cart-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.8rem;
+  color: #fff;
+}
+
+.cart-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.cart-controls button {
+  background: #4da3ff;
+  border: none;
+  border-radius: 4px;
+  color: #fff;
+  padding: 0.2rem 0.6rem;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.cart-controls button:hover {
+  background: #2b6db4;
 }
 
 .tabs {

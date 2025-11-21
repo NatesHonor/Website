@@ -1,0 +1,44 @@
+.success-container {
+  max-width: 600px;
+  margin: 40px auto;
+  text-align: center;
+  font-family: Arial, sans-serif;
+}
+
+.receipt {
+  border: 1px solid #ddd;
+  padding: 20px;
+  margin: 20px 0;
+  text-align: left;
+  background: #fafafa;
+  border-radius: 8px;
+}
+
+.download-btn {
+  background: #0070ba;
+  color: #fff;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.download-btn:hover {
+  background: #005c99;
+}
+
+.loading-spinner {
+  border: 8px solid #f3f3f3;
+  border-top: 8px solid #0070ba;
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  animation: spin 1s linear infinite;
+  margin: 40px auto;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
