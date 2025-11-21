@@ -12,7 +12,10 @@ import LoginPage from './pages/LoginPage';
 import Secret from './pages/Secret';
 import TempPhoto from './pages/tempphoto';
 import AboutMeText from './aboutMeText';
-import SchedulePage from './pages/SchedulePage';
+import BookPage from './pages/BookPage';
+import CheckoutPage from './pages/CheckoutPage';
+import SuccessPage from './pages/SuccessPage';
+import VerifyEmailPage from './pages/VerifyEmailPage';
 
 const MainApp = () => {
   const [activeApp, setActiveApp] = useState(null);
@@ -146,7 +149,11 @@ const App = () => {
         <Route path="/secret" element={<Secret />} />
         <Route path="/tempphoto" element={<TempPhoto />} />
         <Route path="/login" element={<LoginPage />} />
-        <Route path="/schedule" element={<SchedulePage />} />
+        <Route path="/book" element={<BookPage />} />
+        <Route path="/book/checkout" element={<CheckoutPage />} />
+        <Route path="/book/checkout/success" element={<SuccessPage />} />
+        <Route path="/verify-email" element={<VerifyEmailPage />} />
+
         <Route path="/*" element={<MainApp />} />
       </Routes>
     </Router>
