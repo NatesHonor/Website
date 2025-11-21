@@ -182,7 +182,7 @@ const CheckoutPage = () => {
       }
     };
     init();
-  }, [fetchCart, getBrowserSafeClientToken, setUpPayPalButton, setUpPayLaterButton, setUpPayPalCreditButton]);
+  }, []);
 
   useEffect(() => {
     if (statusMessage) {
