@@ -23,10 +23,11 @@ const CheckoutPage = () => {
   }, []);
 
   const getBrowserSafeClientToken = useCallback(async () => {
-    const res = await fetch(`${API_BASE}/paypal-api/auth/browser-safe-client-token`);
-    const data = await res.json();
-    return data.accessToken;
-  }, []);
+  const res = await fetch(`${API_BASE}/paypal-api/auth/browser-safe-client-token`);
+  const data = await res.json();
+  return data.clientToken; 
+}, []);
+
 
   const createOrder = useCallback(async () => {
     const subtotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
