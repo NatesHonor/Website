@@ -22,13 +22,11 @@ const CheckoutPage = () => {
     }
   }, []);
 
-const getBrowserSafeClientToken = useCallback(async () => {
-  const res = await fetch(`${API_BASE}/paypal-api/auth/browser-safe-client-token`);
-  const data = await res.json();
-  return data.clientToken;
-}, []);
-
-
+  const getBrowserSafeClientToken = useCallback(async () => {
+    const res = await fetch(`${API_BASE}/paypal-api/auth/browser-safe-client-token`);
+    const data = await res.json();
+    return data.clientToken;
+  }, []);
 
   const createOrder = useCallback(async () => {
     const subtotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
@@ -49,7 +47,7 @@ const getBrowserSafeClientToken = useCallback(async () => {
       body: JSON.stringify(orderPayload)
     })
       .then((res) => res.json())
-      .then((data) => ({ orderId: data.id }));
+      .then((data) => data.id);
   }, [cart]);
 
   const captureOrder = useCallback(async ({ orderId }) => {
@@ -59,99 +57,6 @@ const getBrowserSafeClientToken = useCallback(async () => {
     }).then((res) => res.json());
   }, []);
 
-  const setUpPayPalButton = useCallback((sdkInstance) => {
-    const session = sdkInstance.createPayPalOneTimePaymentSession({
-      async onApprove(data) {
-        try {
-          await captureOrder({ orderId: data.orderId });
-          window.location.href = "checkout/success?orderId=" + data.orderId;
-        } catch {
-          setStatusMessage("Payment Declined");
-        }
-      },
-      onCancel() {
-        setStatusMessage("Payment Cancelled");
-      },
-      onError() {
-        setStatusMessage("Payment Declined");
-      },
-      onTimeout() {
-        setStatusMessage("Payment Timed Out");
-      }
-    });
-    const btn = document.querySelector("paypal-button");
-    if (!btn) return;
-    btn.removeAttribute("hidden");
-    btn.addEventListener("click", async () => {
-      try {
-        await session.start({ presentationMode: "auto" }, createOrder());
-      } catch {}
-    });
-  }, [createOrder, captureOrder]);
-
-  const setUpPayLaterButton = useCallback((sdkInstance, details) => {
-    const session = sdkInstance.createPayLaterOneTimePaymentSession({
-      async onApprove(data) {
-        try {
-          await captureOrder({ orderId: data.orderId });
-          window.location.href = "checkout/success?orderId=" + data.orderId;
-        } catch {
-          setStatusMessage("Payment Declined");
-        }
-      },
-      onCancel() {
-        setStatusMessage("Payment Cancelled");
-      },
-      onError() {
-        setStatusMessage("Payment Declined");
-      },
-      onTimeout() {
-        setStatusMessage("Payment Timed Out");
-      }
-    });
-    const btn = document.querySelector("paypal-pay-later-button");
-    if (!btn) return;
-    btn.productCode = details.productCode;
-    btn.countryCode = details.countryCode;
-    btn.removeAttribute("hidden");
-    btn.addEventListener("click", async () => {
-      try {
-        await session.start({ presentationMode: "auto" }, createOrder());
-      } catch {}
-    });
-  }, [createOrder, captureOrder]);
-
-  const setUpPayPalCreditButton = useCallback((sdkInstance, details) => {
-    const session = sdkInstance.createPayPalCreditOneTimePaymentSession({
-      async onApprove(data) {
-        try {
-          await captureOrder({ orderId: data.orderId });
-          window.location.href = "checkout/success?orderId=" + data.orderId;
-        } catch {
-          setStatusMessage("Payment Declined");
-        }
-      },
-      onCancel() {
-        setStatusMessage("Payment Cancelled");
-      },
-      onError() {
-        setStatusMessage("Payment Declined");
-      },
-      onTimeout() {
-        setStatusMessage("Payment Timed Out");
-      }
-    });
-    const btn = document.querySelector("paypal-credit-button");
-    if (!btn) return;
-    btn.countryCode = details.countryCode;
-    btn.removeAttribute("hidden");
-    btn.addEventListener("click", async () => {
-      try {
-        await session.start({ presentationMode: "auto" }, createOrder());
-      } catch {}
-    });
-  }, [createOrder, captureOrder]);
-
   useEffect(() => {
     const init = async () => {
       await fetchCart();
@@ -160,23 +65,23 @@ const getBrowserSafeClientToken = useCallback(async () => {
           const clientToken = await getBrowserSafeClientToken();
           const sdkInstance = await window.paypal.createInstance({
             clientToken,
-            components: ["paypal-payments"],
+            components: ["buttons"],
             pageType: "checkout"
           });
-          const paymentMethods = await sdkInstance.findEligibleMethods({
-            currencyCode: "USD"
-          });
-          if (paymentMethods.isEligible("paypal")) {
-            setUpPayPalButton(sdkInstance);
-          }
-          if (paymentMethods.isEligible("paylater")) {
-            const details = paymentMethods.getDetails("paylater");
-            setUpPayLaterButton(sdkInstance, details);
-          }
-          if (paymentMethods.isEligible("credit")) {
-            const details = paymentMethods.getDetails("credit");
-            setUpPayPalCreditButton(sdkInstance, details);
-          }
+
+          await sdkInstance.Buttons({
+            createOrder: async () => {
+              const orderId = await createOrder();
+              return orderId;
+            },
+            onApprove: async (data) => {
+              await captureOrder({ orderId: data.orderID });
+              window.location.href = "checkout/success?orderId=" + data.orderID;
+            },
+            onCancel: () => setStatusMessage("Payment Cancelled"),
+            onError: () => setStatusMessage("Payment Declined")
+          }).render("#paypal-button-container");
+
           setLoading(false);
         } catch {
           setLoading(false);
@@ -184,7 +89,7 @@ const getBrowserSafeClientToken = useCallback(async () => {
       }
     };
     init();
-  }, []);
+  }, [fetchCart, getBrowserSafeClientToken, createOrder, captureOrder]);
 
   useEffect(() => {
     if (statusMessage) {
@@ -221,9 +126,7 @@ const getBrowserSafeClientToken = useCallback(async () => {
             <div className="loading-spinner"></div>
           ) : (
             <div className="buttons-container">
-              <paypal-button type="pay" hidden></paypal-button>
-              <paypal-pay-later-button hidden></paypal-pay-later-button>
-              <paypal-credit-button hidden></paypal-credit-button>
+              <div id="paypal-button-container"></div>
             </div>
           )}
         </div>
