@@ -10,13 +10,9 @@ const CheckoutPage = () => {
 
   const fetchCart = useCallback(async () => {
     try {
-      const res = await fetch(`${API_BASE}/cart/get`, {
-        credentials: "include"
-      });
+      const res = await fetch(`${API_BASE}/cart/get`, { credentials: "include" });
       const data = await res.json();
-      if (data.cart) {
-        setCart(data.cart);
-      }
+      if (data.cart) setCart(data.cart);
     } catch {
       setStatusMessage("Unable to load cart");
     }
@@ -30,31 +26,25 @@ const CheckoutPage = () => {
 
   const createOrder = useCallback(async () => {
     const subtotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
-    const orderPayload = {
+    const payload = {
       intent: "CAPTURE",
-      purchase_units: [
-        {
-          amount: {
-            currency_code: "USD",
-            value: subtotal.toFixed(2)
-          }
-        }
-      ]
+      purchase_units: [{ amount: { currency_code: "USD", value: subtotal.toFixed(2) } }]
     };
-    return fetch(`${API_BASE}/paypal-api/checkout/orders/create`, {
+    const res = await fetch(`${API_BASE}/paypal-api/checkout/orders/create`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(orderPayload)
-    })
-      .then((res) => res.json())
-      .then((data) => data.id);
+      body: JSON.stringify(payload)
+    });
+    const data = await res.json();
+    return data.id;
   }, [cart]);
 
   const captureOrder = useCallback(async ({ orderId }) => {
-    return fetch(`${API_BASE}/paypal-api/checkout/orders/${orderId}/capture`, {
+    const res = await fetch(`${API_BASE}/paypal-api/checkout/orders/${orderId}/capture`, {
       method: "POST",
       headers: { "Content-Type": "application/json" }
-    }).then((res) => res.json());
+    });
+    return res.json();
   }, []);
 
   useEffect(() => {
@@ -63,24 +53,29 @@ const CheckoutPage = () => {
       if (window.paypal) {
         try {
           const clientToken = await getBrowserSafeClientToken();
-          const sdkInstance = await window.paypal.createInstance({
+          const sdk = await window.paypal.createInstance({
             clientToken,
-            components: ["buttons"],
+            components: ["paypal-payments"],
             pageType: "checkout"
           });
 
-          await sdkInstance.Buttons({
-            createOrder: async () => {
-              const orderId = await createOrder();
-              return orderId;
-            },
-            onApprove: async (data) => {
-              await captureOrder({ orderId: data.orderID });
-              window.location.href = "checkout/success?orderId=" + data.orderID;
+          const methods = await sdk.findEligibleMethods({ currencyCode: "USD" });
+          if (methods.isEligible("paypal")) {
+            document.getElementById("paypal-btn").hidden = false;
+          }
+
+          const paypalSession = sdk.createPayPalOneTimePaymentSession({
+            async onApprove({ orderId }) {
+              await captureOrder({ orderId });
+              window.location.href = "checkout/success?orderId=" + orderId;
             },
             onCancel: () => setStatusMessage("Payment Cancelled"),
             onError: () => setStatusMessage("Payment Declined")
-          }).render("#paypal-button-container");
+          });
+
+          document.getElementById("paypal-btn").addEventListener("click", async () => {
+            await paypalSession.start({ presentationMode: "auto" }, createOrder());
+          });
 
           setLoading(false);
         } catch {
@@ -89,7 +84,7 @@ const CheckoutPage = () => {
       }
     };
     init();
-  }, [fetchCart, getBrowserSafeClientToken, createOrder, captureOrder]);
+  }, []);
 
   useEffect(() => {
     if (statusMessage) {
@@ -125,8 +120,8 @@ const CheckoutPage = () => {
           {loading ? (
             <div className="loading-spinner"></div>
           ) : (
-            <div className="buttons-container">
-              <div id="paypal-button-container"></div>
+            <div id="buttons">
+              <paypal-button id="paypal-btn" type="pay" hidden></paypal-button>
             </div>
           )}
         </div>
