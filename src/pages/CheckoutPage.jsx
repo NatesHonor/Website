@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useCallback } from "react";
+import { loadScript } from "@paypal/paypal-js";
 import "../styles/CheckoutPage.css";
 
 const API_BASE = process.env.REACT_APP_API_BASE_URL;
@@ -50,41 +51,33 @@ const CheckoutPage = () => {
   useEffect(() => {
     const init = async () => {
       await fetchCart();
-      if (window.paypal) {
-        try {
-          const clientToken = await getBrowserSafeClientToken();
-          const sdk = await window.paypal.createInstance({
-            clientToken,
-            components: ["paypal-payments"],
-            pageType: "checkout"
-          });
+      try {
+        const clientToken = await getBrowserSafeClientToken();
 
-          const methods = await sdk.findEligibleMethods({ currencyCode: "USD" });
-          if (methods.isEligible("paypal")) {
-            document.getElementById("paypal-btn").hidden = false;
-          }
+        const paypal = await loadScript({
+          "client-token": clientToken,
+          components: ["buttons"]
+        });
 
-          const paypalSession = sdk.createPayPalOneTimePaymentSession({
-            async onApprove({ orderId }) {
-              await captureOrder({ orderId });
-              window.location.href = "checkout/success?orderId=" + orderId;
-            },
-            onCancel: () => setStatusMessage("Payment Cancelled"),
-            onError: () => setStatusMessage("Payment Declined")
-          });
+        paypal.Buttons({
+          createOrder: async () => {
+            return await createOrder();
+          },
+          onApprove: async (data) => {
+            await captureOrder({ orderId: data.orderID });
+            window.location.href = `/checkout/success?orderId=${data.orderID}`;
+          },
+          onCancel: () => setStatusMessage("Payment Cancelled"),
+          onError: () => setStatusMessage("Payment Declined")
+        }).render("#paypal-button-container");
 
-          document.getElementById("paypal-btn").addEventListener("click", async () => {
-            await paypalSession.start({ presentationMode: "auto" }, createOrder());
-          });
-
-          setLoading(false);
-        } catch {
-          setLoading(false);
-        }
+        setLoading(false);
+      } catch {
+        setLoading(false);
       }
     };
     init();
-  }, []);
+  }, [fetchCart, getBrowserSafeClientToken, createOrder, captureOrder]);
 
   useEffect(() => {
     if (statusMessage) {
@@ -120,9 +113,7 @@ const CheckoutPage = () => {
           {loading ? (
             <div className="loading-spinner"></div>
           ) : (
-            <div id="buttons">
-              <paypal-button id="paypal-btn" type="pay" hidden></paypal-button>
-            </div>
+            <div id="paypal-button-container"></div>
           )}
         </div>
       </div>
