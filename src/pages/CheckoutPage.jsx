@@ -1,8 +1,20 @@
 import React, { useEffect, useState, useCallback } from "react";
-import { loadScript } from "@paypal/paypal-js";
 import "../styles/CheckoutPage.css";
 
 const API_BASE = process.env.REACT_APP_API_BASE_URL;
+
+function waitForPayPal() {
+  return new Promise((resolve) => {
+    const check = () => {
+      if (window.paypal && window.paypal.createInstance) {
+        resolve(window.paypal);
+      } else {
+        setTimeout(check, 50);
+      }
+    };
+    check();
+  });
+}
 
 const CheckoutPage = () => {
   const [loading, setLoading] = useState(true);
@@ -53,26 +65,31 @@ const CheckoutPage = () => {
       await fetchCart();
       try {
         const clientToken = await getBrowserSafeClientToken();
+        const paypal = await waitForPayPal();
 
-        const paypal = await loadScript({
-          "client-token": clientToken,
-          components: ["buttons"]
+        const sdk = await paypal.createInstance({
+          clientToken,
+          components: ["paypal-payments"],
+          pageType: "checkout"
         });
 
-        paypal.Buttons({
-          createOrder: async () => {
-            return await createOrder();
-          },
-          onApprove: async (data) => {
-            await captureOrder({ orderId: data.orderID });
-            window.location.href = `/checkout/success?orderId=${data.orderID}`;
+        // Optional: log eligible methods
+        const methods = await sdk.findEligibleMethods({ currencyCode: "USD" });
+        console.log("Eligible methods:", methods);
+
+        sdk.Buttons({
+          createOrder: async () => await createOrder(),
+          onApprove: async ({ orderID }) => {
+            await captureOrder({ orderId: orderID });
+            window.location.href = `/checkout/success?orderId=${orderID}`;
           },
           onCancel: () => setStatusMessage("Payment Cancelled"),
           onError: () => setStatusMessage("Payment Declined")
         }).render("#paypal-button-container");
 
         setLoading(false);
-      } catch {
+      } catch (err) {
+        console.error("PayPal init failed", err);
         setLoading(false);
       }
     };
